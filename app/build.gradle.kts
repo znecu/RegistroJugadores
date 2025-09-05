@@ -1,15 +1,9 @@
-val Any.serialization: kotlin.Any
-
-val org.gradle.accessors.dm.LibrariesForLibs.kotlin: kotlin.Any
-
-val Any.json: kotlin.Any
-
-val org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension.serialization: kotlin.Any
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.ksp)
+
 }
 
 android {
@@ -48,7 +42,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -65,5 +58,43 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    // Room
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
 
+    // ViewModel y LiveData
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.3")
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.3")
+
+    // Compose
+    implementation("androidx.compose.ui:ui:1.9.0")
+    implementation("androidx.compose.material3:material3:1.3.2")
+
+    val composeBom = platform("androidx.compose:compose-bom:2025.08.00")
+    implementation(composeBom)
+    androidTestImplementation(composeBom)
+
+    implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.material:material")
+    implementation("androidx.compose.foundation:foundation")
+    implementation("androidx.compose.ui:ui")
+
+    // Android Studio Preview support
+    implementation("androidx.compose.ui:ui-tooling-preview")
+    debugImplementation("androidx.compose.ui:ui-tooling")
+
+    // UI Tests
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    implementation("androidx.compose.material:material-icons-core")
+    implementation("androidx.compose.material:material-icons-extended")
+    implementation("androidx.compose.material3.adaptive:adaptive")
+
+    implementation("androidx.activity:activity-compose:1.10.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.3")
+    implementation("androidx.compose.runtime:runtime-livedata")
+    implementation("androidx.compose.runtime:runtime-rxjava2")
 }

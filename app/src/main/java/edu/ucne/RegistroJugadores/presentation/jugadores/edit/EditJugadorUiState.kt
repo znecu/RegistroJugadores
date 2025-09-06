@@ -1,7 +1,5 @@
 package edu.ucne.RegistroJugadores.presentation.jugadores.edit
 
-import androidx.compose.ui.input.pointer.PointerId
-
 data class EditJugadorUiState(
     val jugadorId: Int? = null,
     val nombres: String = "",

@@ -8,11 +8,11 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface JugadorDao {
-    @Query(value = "SELECT * FROM jugadores ORDER BY jugadorId DESC")
+    @Query(value = "SELECT * FROM Jugadores ORDER BY jugadorId DESC")
     fun ObserveAll(): Flow<List<JugadorEntity>>
 
-    @Query(value = "SELECT * FROM jugadores WHERE jugadorId = :id ")
-    suspend fun  getById(id: Int?): JugadorEntity?
+    @Query(value = "SELECT * FROM Jugadores WHERE jugadorId = :id")
+    suspend fun getById(id: Int?): JugadorEntity?
 
     @Upsert
     suspend fun upsert(entity: JugadorEntity)
@@ -20,9 +20,9 @@ interface JugadorDao {
     @Delete
     suspend fun delete(entity: JugadorEntity)
 
-    @Query(value = "DELETE FROM jugadores WHERE jugadorId = :id")
+    @Query(value = "DELETE FROM Jugadores WHERE jugadorId = :id")
     suspend fun deleteById(id: Int)
 
-    @Query("SELECT EXISTS(SELECT 1 FROM jugadores WHERE LOWER(nombres) = LOWER(:nombre) AND (:excludeId IS NULL OR jugadorId != :excludeId))")
+    @Query("SELECT EXISTS(SELECT 1 FROM Jugadores WHERE LOWER(TRIM(nombres)) = LOWER(TRIM(:nombre)) AND (:excludeId IS NULL OR jugadorId != :excludeId))")
     suspend fun existeNombre(nombre: String, excludeId: Int?): Boolean
 }

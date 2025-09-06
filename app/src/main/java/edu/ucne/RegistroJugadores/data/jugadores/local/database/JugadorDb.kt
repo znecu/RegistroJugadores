@@ -9,10 +9,9 @@ import edu.ucne.RegistroJugadores.data.jugadores.local.JugadorEntity
     entities = [
         JugadorEntity::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
-
 abstract class JugadorDb : RoomDatabase(){
     abstract fun jugadorDao() : JugadorDao
 }

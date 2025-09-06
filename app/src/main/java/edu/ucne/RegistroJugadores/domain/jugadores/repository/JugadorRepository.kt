@@ -14,4 +14,6 @@ interface JugadorRepository {
 
     suspend fun deleteById(id: Int)
 
+    suspend fun existeNombre(nombre: String, excludeId: Int? = null): Boolean
+
 }

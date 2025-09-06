@@ -1,6 +1,5 @@
 package edu.ucne.RegistroJugadores.presentation.jugadores.edit
 
-import android.R.attr.text
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,7 +11,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -27,6 +25,7 @@ fun EditJugadorScreen(
     viewModel: EditJugadorViewModel = hiltViewModel()
 ){
     val state by viewModel.state.collectAsStateWithLifecycle()
+
     EditJugadorBody(
         state = state,
         onEvent = viewModel::onEvent
@@ -38,45 +37,52 @@ fun EditJugadorBody(
     state: EditJugadorUiState,
     onEvent: (EditJugadorUiEvent) -> Unit
 ){
-    Scaffold { padding ->
-        Column(
+    Column(
+        modifier = Modifier
+            .padding(16.dp)
+    ){
+        OutlinedTextField(
+            value = state.nombres,
+            onValueChange = {onEvent(EditJugadorUiEvent.NombresChanged(it)) },
+            label = { Text("Nombres: ") },
+            isError = state.nombreError != null,
             modifier = Modifier
-                .padding(padding)
-                .padding(16.dp)
-        ){
-            OutlinedTextField(
-                value = state.nombres,
-                onValueChange = {onEvent(EditJugadorUiEvent.NombresChanged(it)) },
-                label = { Text("Nombres: ") },
-                isError = state.nombreError != null,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .testTag("input_nombres")
+                .fillMaxWidth()
+                .testTag("input_nombres")
+        )
+        if(state.nombreError != null){
+            Text(
+                text = state.nombreError,
+                color = MaterialTheme.colorScheme.error
             )
-            if(state.nombreError != null){
-                Text(
-                    text = state.nombreError,
-                    color = MaterialTheme.colorScheme.error
-                )
-            }
-            Spacer(Modifier.height(16.dp))
-            Row {
-                Button(
-                    onClick = { onEvent(EditJugadorUiEvent.Save)},
-                    enabled = !state.isSaving,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .testTag("btn_guardar")
-                ) {Text("Guardar")}
-                Spacer(Modifier.width(8.dp))
-                if(!state.isNew){
-                    OutlinedButton(
-                        onClick = {onEvent(EditJugadorUiEvent.Delete)},
-                        enabled = !state.isDeleting,
-                        modifier = Modifier.testTag("btn_eliminar")
-                    ) {Text("Eliminar")}
-                }
-            }
+        }
+        Spacer(Modifier.height(16.dp))
+
+        OutlinedTextField(
+            value = state.partidas,
+            onValueChange = {onEvent(EditJugadorUiEvent.PartidasChanged(it)) },
+            label = { Text("Partidas: ") },
+            isError = state.partidasError != null,
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag("input_partidas")
+        )
+        if(state.partidasError != null){
+            Text(
+                text = state.partidasError,
+                color = MaterialTheme.colorScheme.error
+            )
+        }
+        Spacer(Modifier.height(16.dp))
+
+        Button(
+            onClick = { onEvent(EditJugadorUiEvent.Save)},
+            enabled = !state.isSaving,
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag("btn_guardar")
+        ) {
+            Text("Guardar")
         }
     }
 }

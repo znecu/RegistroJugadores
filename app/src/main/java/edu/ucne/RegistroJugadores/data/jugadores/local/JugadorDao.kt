@@ -12,7 +12,7 @@ interface JugadorDao {
     fun ObserveAll(): Flow<List<JugadorEntity>>
 
     @Query(value = "SELECT * FROM jugadores WHERE jugadorId = :id ")
-    suspend fun  getById(id: Int): JugadorEntity?
+    suspend fun  getById(id: Int?): JugadorEntity?
 
     @Upsert
     suspend fun upsert(entity: JugadorEntity)

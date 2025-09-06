@@ -1,6 +1,5 @@
 package edu.ucne.RegistroJugadores.presentation.jugadores.list
 
-import android.R.attr.padding
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,9 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -29,7 +26,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import edu.ucne.RegistroJugadores.domain.jugadores.model.Jugador
 
 @Composable
-
 fun ListScreen(
     viewModel: ListJugadorViewModel = hiltViewModel()
 ) {
@@ -42,40 +38,29 @@ fun ListJugadorBody(
     state: ListJugadorUiState,
     onEvent: (ListJugadorUiEvent) -> Unit
 ) {
-    Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = { onEvent(ListJugadorUiEvent.CreateNew) },
-                modifier = Modifier.testTag("fab_add")
-            ) {
-                Text("+")
-            }
-        }
-    ) { padding ->
-        Box(
-            modifier = Modifier
-                .padding(padding)
-                .fillMaxSize()
-        ) {
-            if (state.isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .testTag("loading")
-                )
-            }
-            LazyColumn(
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        if (state.isLoading) {
+            CircularProgressIndicator(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp)
-                    .testTag("jugador_list")
-            ) {
-                items(state.jugadores) { jugador ->
-                    JugadorCard(
-                        jugador = jugador,
-                        onClick = { onEvent(ListJugadorUiEvent.Edit(jugador.jugadorId)) },
-                        onDelete = { onEvent(ListJugadorUiEvent.Delete(jugador.jugadorId)) })
-                }
+                    .align(Alignment.Center)
+                    .testTag("loading")
+            )
+        }
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+                .testTag("jugador_list")
+        ) {
+            items(state.jugadores) { jugador ->
+                JugadorCard(
+                    jugador = jugador,
+                    onEdit = { onEvent(ListJugadorUiEvent.Edit(jugador.jugadorId)) },
+                    onDelete = { onEvent(ListJugadorUiEvent.Delete(jugador.jugadorId)) }
+                )
             }
         }
     }
@@ -84,15 +69,15 @@ fun ListJugadorBody(
 @Composable
 fun JugadorCard(
     jugador: Jugador,
-    onClick: (Jugador) -> Unit,
-    onDelete: (Int) -> Unit
+    onEdit: () -> Unit,
+    onDelete: () -> Unit
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
-            .testTag("jugador_card_${'$'}{jugador.jugadorId}")
-            .clickable { onClick(jugador) }
+            .testTag("jugador_card_${jugador.jugadorId}")
+            .clickable { onEdit() }
     ) {
         Row(
             modifier = Modifier
@@ -105,10 +90,17 @@ fun JugadorCard(
                 Text("Partidas: ${jugador.partidas}")
             }
             TextButton(
-                onClick = {onDelete(jugador.jugadorId)},
-                modifier = Modifier.testTag("delete_button_${'$'}{jugador.jugadorId}")
-
-            ) { Text("Eliminar") }
+                onClick = onEdit,
+                modifier = Modifier.testTag("edit_button_${jugador.jugadorId}")
+            ) {
+                Text("Editar")
+            }
+            TextButton(
+                onClick = onDelete,
+                modifier = Modifier.testTag("delete_button_${jugador.jugadorId}")
+            ) {
+                Text("Eliminar")
+            }
         }
     }
 }

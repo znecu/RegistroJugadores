@@ -1,7 +1,7 @@
-package edu.ucne.RegistroJugadores.partidas.mapper
+package edu.ucne.RegistroJugadores.data.partidas.mapper
 
 import edu.ucne.RegistroJugadores.domain.partidas.model.Partida
-import edu.ucne.RegistroJugadores.partidas.local.PartidaEntity
+import edu.ucne.RegistroJugadores.data.partidas.local.PartidaEntity
 
 fun PartidaEntity.toDomain(): Partida = Partida(
     partidaId = partidaId,

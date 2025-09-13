@@ -1,10 +1,10 @@
-package edu.ucne.RegistroJugadores.partidas.repository
+package edu.ucne.RegistroJugadores.data.partidas.repository
 
 import edu.ucne.RegistroJugadores.domain.partidas.model.Partida
 import edu.ucne.RegistroJugadores.domain.partidas.repository.PartidaRepository
-import edu.ucne.RegistroJugadores.partidas.local.PartidaDao
-import edu.ucne.RegistroJugadores.partidas.mapper.toDomain
-import edu.ucne.RegistroJugadores.partidas.mapper.toEntity
+import edu.ucne.RegistroJugadores.data.partidas.local.PartidaDao
+import edu.ucne.RegistroJugadores.data.partidas.mapper.toDomain
+import edu.ucne.RegistroJugadores.data.partidas.mapper.toEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject

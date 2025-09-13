@@ -3,10 +3,8 @@ package edu.ucne.RegistroJugadores.partidas.local
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import com.google.type.Date
 import edu.ucne.RegistroJugadores.data.jugadores.local.JugadorEntity
-
-
+import java.util.Date
 @Entity(
     tableName = "Partidas",
     foreignKeys = [

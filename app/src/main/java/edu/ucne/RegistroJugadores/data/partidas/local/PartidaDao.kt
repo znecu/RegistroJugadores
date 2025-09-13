@@ -1,4 +1,4 @@
-package edu.ucne.RegistroJugadores.partidas.local
+package edu.ucne.RegistroJugadores.data.partidas.local
 
 import androidx.room.Dao
 import androidx.room.Delete

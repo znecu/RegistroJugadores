@@ -25,5 +25,7 @@ object AppModule {
     @Provides
     fun provideJugadorDao(jugadorDb: JugadorDb) = jugadorDb.jugadorDao()
 
+    @Provides
+    fun providePartidaDao(jugadorDb: JugadorDb) = jugadorDb.partidaDao()
 
 }

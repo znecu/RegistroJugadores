@@ -11,19 +11,19 @@ import java.util.Date
         ForeignKey (
             entity = JugadorEntity::class,
             parentColumns = ["jugadorId"],
-            childColumns = ["jugador1ID"],
+            childColumns = ["jugador1Id"],
             onDelete = ForeignKey.RESTRICT
         ),
         ForeignKey (
             entity = JugadorEntity::class,
             parentColumns = ["jugadorId"],
-            childColumns = ["jugador2ID"],
+            childColumns = ["jugador2Id"],
             onDelete = ForeignKey.RESTRICT
         ),
         ForeignKey (
             entity = JugadorEntity::class,
             parentColumns = ["jugadorId"],
-            childColumns = ["ganadorID"],
+            childColumns = ["ganadorId"],
             onDelete = ForeignKey.RESTRICT
         ),
     ]
@@ -32,9 +32,9 @@ import java.util.Date
 class PartidaEntity(
     @PrimaryKey(autoGenerate = true)
     val partidaId: Int = 0,
-    val fecha: Date = Date(),
+    val fecha: String = "",
     val jugador1Id: Int = 0,
     val jugador2Id: Int = 0,
-    val ganadorId: Int = 0,
+    val ganadorId: Int? = null,
     val esFinalizada: Boolean = false
 )

@@ -5,7 +5,7 @@ data class ValidacionesPartidas(
     val error:String? = null
 )
 
-fun validateJugador1(value:String): ValidacionesPartidas{
+fun validateJugador1(value:String, jugador2:String): ValidacionesPartidas{
     if(value.isBlank())
         return ValidacionesPartidas(false, "Debe de haber un jugador 1.")
     val jugador1 = value.toIntOrNull()
@@ -14,7 +14,7 @@ fun validateJugador1(value:String): ValidacionesPartidas{
     return ValidacionesPartidas(true)
 }
 
-fun validateJugador2(value:String): ValidacionesPartidas{
+fun validateJugador2(value:String, jugador1: String): ValidacionesPartidas{
     if(value.isBlank())
         return ValidacionesPartidas(false, "Debe de haber un jugador 2.")
     val jugador2 = value.toIntOrNull()

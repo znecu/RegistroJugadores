@@ -75,8 +75,6 @@ class EditPartidaViewModel @Inject constructor(
                 }
             }
         }
-
-
     }
 
     private fun onSave() {

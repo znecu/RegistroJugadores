@@ -20,7 +20,7 @@ import edu.ucne.RegistroJugadores.presentation.partidas.list.ListPartidaViewMode
 import kotlinx.coroutines.launch
 
 @Composable
-fun RegJugadoresNavHost(
+fun TicTacToeNavHost(
     navHostController: NavHostController
 ) {
     val scope = rememberCoroutineScope()

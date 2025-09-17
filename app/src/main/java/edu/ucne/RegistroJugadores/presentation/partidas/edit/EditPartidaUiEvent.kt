@@ -9,5 +9,9 @@ sealed interface EditPartidaUiEvent {
     data class EsFinalizadaChanged(val value: Boolean) : EditPartidaUiEvent
     data object Save : EditPartidaUiEvent
     data object Delete : EditPartidaUiEvent
+    data object Cancel : EditPartidaUiEvent
+
+    data class CargarJugadores(val value: String): EditPartidaUiEvent
+
 
 }

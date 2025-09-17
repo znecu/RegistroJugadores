@@ -3,6 +3,7 @@ package edu.ucne.RegistroJugadores.presentation.partidas.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import edu.ucne.RegistroJugadores.domain.jugadores.usecase.ObserveJugadorUseCase
 import edu.ucne.RegistroJugadores.domain.partidas.model.Partida
 import edu.ucne.RegistroJugadores.domain.partidas.usecase.DeletePartidaUseCase
 import edu.ucne.RegistroJugadores.domain.partidas.usecase.GetPartidaUseCase
@@ -20,17 +21,22 @@ import javax.inject.Inject
 class EditPartidaViewModel @Inject constructor(
     private val getPartidaUseCase: GetPartidaUseCase,
     private val upsertPartidaUseCase: UpsertPartidaUseCase,
-    private val deletePartidaUseCase: DeletePartidaUseCase
+    private val deletePartidaUseCase: DeletePartidaUseCase,
+    private val observeJugadorUseCase: ObserveJugadorUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(value = EditPartidaUiState())
 
     val state: StateFlow<EditPartidaUiState> = _state.asStateFlow()
 
+    init {
+        cargarJugadores()
+    }
+
     fun onEvent(event: EditPartidaUiEvent) {
         when (event) {
             is EditPartidaUiEvent.Load -> onLoad(id = event.id)
             is EditPartidaUiEvent.FechaChanged -> _state.update {
-                it.copy(fecha = state.value.fecha)
+                it.copy(fecha = event.value)
             }
             is EditPartidaUiEvent.Jugador1Changed -> _state.update {
                 it.copy(jugador1ID = event.value, jugador1Error = null)
@@ -48,9 +54,13 @@ class EditPartidaViewModel @Inject constructor(
                 it.copy(esFinalizada = event.value)
             }
 
-            EditPartidaUiEvent.Delete -> onSave()
+            is EditPartidaUiEvent.CargarJugadores -> cargarJugadores()
 
-            EditPartidaUiEvent.Save -> onDelete()
+            EditPartidaUiEvent.Save -> onSave()
+
+            EditPartidaUiEvent.Delete -> onDelete()
+
+            EditPartidaUiEvent.Cancel -> _state.update { EditPartidaUiState() }
         }
     }
 
@@ -84,7 +94,6 @@ class EditPartidaViewModel @Inject constructor(
         val jugador1Validations = validateJugador1(jugador1ID.toString(), jugador2ID.toString())
         val jugador2Validations = validateJugador2(jugador2ID.toString(), jugador1ID.toString())
 
-
         if (!jugador1Validations.isValid || !jugador2Validations.isValid) {
             _state.update {
                 it.copy(
@@ -108,19 +117,28 @@ class EditPartidaViewModel @Inject constructor(
             )
             val result = upsertPartidaUseCase(partida)
             result.onSuccess { newId ->
-                _state.value = EditPartidaUiState()
+                _state.update { it.copy(isSaving = false, saved = true) }
             }.onFailure { e ->
                 _state.update { it.copy(isSaving = false) }
             }
         }
     }
 
-    private fun onDelete(){
+    private fun onDelete() {
         val id = state.value.partidaId ?: return
         viewModelScope.launch {
-            _state.update {it.copy(isDeleting = true)}
-            deletePartidaUseCase(id) // Todo Manejar resultado
-            _state.update { it.copy(isDeleting = false, deleted = true)}
+            _state.update { it.copy(isDeleting = true) }
+            deletePartidaUseCase(id)
+            _state.update { it.copy(isDeleting = false, deleted = true) }
+        }
+    }
+
+    private fun cargarJugadores() {
+        viewModelScope.launch {
+            _state.update { it.copy(jugadoresLoading = true) }
+            observeJugadorUseCase().collect { jugadores ->
+                _state.update { it.copy(jugadoresLoading = false, listaJugadores = jugadores) }
+            }
         }
     }
 }

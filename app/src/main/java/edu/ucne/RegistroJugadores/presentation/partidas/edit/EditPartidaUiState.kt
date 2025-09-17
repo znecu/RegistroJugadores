@@ -1,5 +1,7 @@
 package edu.ucne.RegistroJugadores.presentation.partidas.edit
 
+import edu.ucne.RegistroJugadores.domain.jugadores.model.Jugador
+
 data class EditPartidaUiState(
     val partidaId: Int? = null,
     val jugador1ID: Int = 0,
@@ -9,9 +11,13 @@ data class EditPartidaUiState(
     val esFinalizada: Boolean = false,
     val jugador1Error: String? = null,
     val jugador2Error: String? = null,
+
     val isSaving: Boolean = false,
     val isDeleting: Boolean = false,
     val isNew: Boolean = true,
     val saved: Boolean = false,
-    val deleted: Boolean = false
+    val deleted: Boolean = false,
+
+    val listaJugadores: List<Jugador> = emptyList(),
+    val jugadoresLoading: Boolean = true
 )

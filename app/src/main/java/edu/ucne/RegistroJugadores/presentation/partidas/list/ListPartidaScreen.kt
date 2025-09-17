@@ -14,7 +14,6 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
-import androidx.compose.material.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -29,7 +28,8 @@ import edu.ucne.RegistroJugadores.domain.partidas.model.Partida
 
 @Composable
 fun ListPartidaScreen(
-    viewModel: ListPartidaViewModel = hiltViewModel()
+    viewModel: ListPartidaViewModel = hiltViewModel(),
+    onEditPartida: (Int) -> Unit
 
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()

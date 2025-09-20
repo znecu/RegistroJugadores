@@ -33,7 +33,7 @@ fun DrawerMenu(
     navHostController: NavHostController,
     content: @Composable () -> Unit
 ) {
-    val selectedItem = remember { mutableStateOf("Sistemas") }
+    val selectedItem = remember { mutableStateOf("Jugadores") }
     val scope = rememberCoroutineScope()
 
     fun handleItemClick(destination: Screen, item: String) {

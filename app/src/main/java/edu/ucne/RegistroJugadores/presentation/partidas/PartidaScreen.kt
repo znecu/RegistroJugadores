@@ -35,7 +35,11 @@ fun PartidaScreen(
     Scaffold(
         topBar = {
             TopBarComponent(
-                title = if (showEdit) "Editar Partida" else "Registro de Partidas",
+                title = when {
+                    !showEdit -> "Registro de Partidas"
+                    partidaIdEdit == null -> "Crear Partida"
+                    else -> "Editar Partida"
+                },
                 onDrawer
             )
         },

@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -65,10 +66,30 @@ class EditPartidaViewModel @Inject constructor(
     }
 
     private fun onLoad(id: Int?) {
+        _state.update {
+            it.copy(
+                saved = false,
+                deleted = false,
+                jugador1Error = null,
+                jugador2Error = null
+            )
+        }
+
         if (id == null || id == 0) {
-            _state.update { it.copy(isNew = true, partidaId = null) }
+            _state.update {
+                it.copy(
+                    isNew = true,
+                    partidaId = null,
+                    jugador1ID = 0,
+                    jugador2ID = 0,
+                    ganadorID = null,
+                    esFinalizada = false,
+                    fecha = Date().toString()
+                )
+            }
             return
         }
+
         viewModelScope.launch {
             val partida = getPartidaUseCase(id)
             if (partida != null) {
@@ -88,6 +109,10 @@ class EditPartidaViewModel @Inject constructor(
     }
 
     private fun onSave() {
+
+        val currentJugadores = state.value.listaJugadores
+        val isCurrentlyLoading = state.value.jugadoresLoading
+
         val jugador1ID = state.value.jugador1ID
         val jugador2ID = state.value.jugador2ID
 
@@ -98,8 +123,10 @@ class EditPartidaViewModel @Inject constructor(
             _state.update {
                 it.copy(
                     jugador1Error = jugador1Validations.error,
-                    jugador2Error = jugador2Validations.error
-                )
+                    jugador2Error = jugador2Validations.error,
+
+                    )
+
             }
             return
         }

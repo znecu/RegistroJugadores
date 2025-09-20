@@ -27,10 +27,19 @@ import edu.ucne.RegistroJugadores.domain.logros.model.Logro
 
 @Composable
 fun ListScreen(
-    viewModel: ListLogroViewModel = hiltViewModel()
+    viewModel: ListLogroViewModel = hiltViewModel(),
+    onEditLogro: (Int) -> Unit = {}
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    ListLogroBody(state, viewModel::onEvent)
+    ListLogroBody(
+        state = state,
+        onEvent = { event ->
+            when (event) {
+                is ListLogroUiEvent.Edit -> onEditLogro(event.id)
+                else -> viewModel.onEvent(event)
+            }
+        }
+    )
 }
 
 @Composable
@@ -65,6 +74,7 @@ fun ListLogroBody(
         }
     }
 }
+
 @Composable
 fun LogroCard(
     logro: Logro,
@@ -103,6 +113,7 @@ fun LogroCard(
         }
     }
 }
+
 @Preview
 @Composable
 private fun ListLogroBodyBodyPreview(){

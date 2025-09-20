@@ -9,4 +9,6 @@ sealed class Screen {
     object Partidas : Screen()
     @Serializable
     object TicTacToe : Screen()
+    @Serializable
+    object Logros: Screen()
 }

@@ -11,18 +11,22 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import edu.ucne.RegistroJugadores.domain.jugadores.model.Jugador
+import androidx.navigation.NavHostController
+import edu.ucne.RegistroJugadores.presentation.navigation.Screen
 
 
 @Composable
 fun EditPartidaScreen(
     viewModel: EditPartidaViewModel = hiltViewModel(),
     onCancel: () -> Unit = {},
-    onSaveSuccess: () -> Unit = {}
+    onSaveSuccess: () -> Unit = {},
+    navController: NavHostController? = null
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(state.saved) {
         if (state.saved) {
+            navController?.navigate(Screen.TicTacToe)
             onSaveSuccess()
         }
     }

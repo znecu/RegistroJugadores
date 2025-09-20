@@ -17,6 +17,7 @@ import edu.ucne.RegistroJugadores.presentation.navigation.Screen
 import edu.ucne.RegistroJugadores.presentation.partidas.PartidaScreen
 import edu.ucne.RegistroJugadores.presentation.partidas.edit.EditPartidaViewModel
 import edu.ucne.RegistroJugadores.presentation.partidas.list.ListPartidaViewModel
+import edu.ucne.RegistroJugadores.presentation.tictactoe.TicTacToeScreen
 import kotlinx.coroutines.launch
 
 @Composable
@@ -61,6 +62,9 @@ fun TicTacToeNavHost(
                     editPartidaViewModel,
                     listPartidaViewModel
                 )
+            }
+            composable<Screen.TicTacToe> {
+                TicTacToeScreen()
             }
         }
     }

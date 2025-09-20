@@ -9,6 +9,7 @@ import androidx.compose.material3.DrawerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddReaction
 import androidx.compose.material.icons.filled.Addchart
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
@@ -74,7 +75,13 @@ fun DrawerMenu(
                         ) {
                             handleItemClick(Screen.Partidas, it)
                         }
-
+                        DrawerItem(
+                            title = stringResource(R.string.drawer_logro),
+                            icon = Icons.Filled.Star,
+                            isSelected = selectedItem.value == stringResource(R.string.drawer_logro)
+                        ){
+                            handleItemClick(Screen.Logros, it)
+                        }
                     }
                 }
             }

@@ -12,6 +12,7 @@ import androidx.navigation.toRoute
 import edu.ucne.RegistroJugadores.presentation.jugadores.JugadorScreen
 import edu.ucne.RegistroJugadores.presentation.jugadores.edit.EditJugadorViewModel
 import edu.ucne.RegistroJugadores.presentation.jugadores.list.ListJugadorViewModel
+import edu.ucne.RegistroJugadores.presentation.logros.LogroScreen
 import edu.ucne.RegistroJugadores.presentation.navigation.DrawerMenu
 import edu.ucne.RegistroJugadores.presentation.navigation.Screen
 import edu.ucne.RegistroJugadores.presentation.partidas.PartidaScreen
@@ -61,6 +62,15 @@ fun TicTacToeNavHost(
                     },
                     editPartidaViewModel,
                     listPartidaViewModel
+                )
+            }
+            composable<Screen.Logros> {
+                LogroScreen(
+                    onDrawer = {
+                        scope.launch {
+                            drawerState.open()
+                        }
+                    }
                 )
             }
             composable<Screen.TicTacToe> {

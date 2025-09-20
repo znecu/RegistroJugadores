@@ -3,4 +3,5 @@
 
     <string name="drawer_jugador">Jugadores</string>
     <string name="drawer_partida">Partidas</string>
+    <string name="drawer_logro">Logros</string>
 </resources>

@@ -166,72 +166,7 @@ private fun EditPartidaBody(
 
         val ganadorSeleccionable = state.jugador1ID != null && state.jugador2ID != null
         val ganadorID = state.ganadorID
-        Column(modifier = Modifier.fillMaxWidth()) {
-            Text(
-                text = "Selecciona al ganador:",
-                style = MaterialTheme.typography.bodyLarge
-            )
-            Spacer(modifier = Modifier.height(8.dp))
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Button(
-                    onClick = { onEvent(EditPartidaUiEvent.GanadorChanged(state.jugador1ID!!)) },
-                    enabled = ganadorSeleccionable,
-                    modifier = Modifier
-                        .weight(1f),
-                    colors = if (ganadorID == state.jugador1ID)
-                        ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
-                    else
-                        ButtonDefaults.buttonColors()
-                ) {
-                    Text(
-                        text = state.listaJugadores.find { it.jugadorId == state.jugador1ID }?.nombres
-                            ?: "Jugador 1",
-                        color = if (ganadorID == state.jugador1ID) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
-                    )
-                }
-
-                Button(
-                    onClick = { onEvent(EditPartidaUiEvent.GanadorChanged(state.jugador2ID!!)) },
-                    enabled = ganadorSeleccionable,
-                    modifier = Modifier
-                        .weight(1f),
-                    colors = if (ganadorID == state.jugador2ID)
-                        ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
-                    else
-                        ButtonDefaults.buttonColors()
-                ) {
-                    Text(
-                        text = state.listaJugadores.find { it.jugadorId == state.jugador2ID }?.nombres
-                            ?: "Jugador 2",
-                        color = if (ganadorID == state.jugador2ID) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
-                    )
-                }
-            }
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = "Ganador: ${state.ganadorID?.let { id -> state.listaJugadores.find { it.jugadorId == id }?.nombres } ?: "Seleccione un ganador"}",
-            style = MaterialTheme.typography.bodyLarge
-        )
-
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Checkbox(
-                checked = state.esFinalizada,
-                onCheckedChange = { checked ->
-                    onEvent(
-                        EditPartidaUiEvent.EsFinalizadaChanged(
-                            checked
-                        )
-                    )
-                }
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(text = "¿Terminó la partida?")
-        }
         Spacer(modifier = Modifier.height(8.dp))
 
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {

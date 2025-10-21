@@ -40,7 +40,7 @@ fun TicTacToeNavHost(
     ) {
         NavHost(
             navController = navHostController,
-            startDestination = Screen.Jugadores
+            startDestination = Screen.TicTacToe
         ) {
             composable<Screen.Jugadores> {
                 JugadorScreen(

@@ -16,23 +16,14 @@ class MovimientosRepositoryImpl @Inject constructor(
     private val remoteDataSource: RemoteDataSource
 ) : MovimientosRepository {
 
-    override fun getMovimiento(id: Int): Flow<Resource<Movimiento>> = flow {
+    override fun getMovimiento(id: Int): Flow<Resource<List<Movimiento>>> = flow {
         try {
-            emit(Resource.Loading<Movimiento>())
-
+            emit(Resource.Loading<List<Movimiento>>())
             val movimientosDto = remoteDataSource.getMovimiento(id)
-
-            if (movimientosDto.isNotEmpty()) {
-                val movimiento = movimientosDto.first().toDomain()
-                emit(Resource.Success(movimiento))
-            } else {
-                emit(Resource.Error("No se encontraron movimientos"))
-            }
-
+            val movimientos = movimientosDto.map { it.toDomain() }
+            emit(Resource.Success(movimientos))
         } catch (e: HttpException) {
-            emit(Resource.Error("Error de servidor: ${e.message()}"))
-        } catch (e: IOException) {
-            emit(Resource.Error("Error de red: ${e.message}"))
+            emit(Resource.Error("Error del servidor: ${e.message()}"))
         } catch (e: Exception) {
             emit(Resource.Error("Error desconocido: ${e.localizedMessage}"))
         }
@@ -40,13 +31,11 @@ class MovimientosRepositoryImpl @Inject constructor(
 
     override suspend fun saveMovimiento(movimiento: Movimiento): Resource<Unit> {
         return try {
-            val movimientoDto = movimiento.toDto()
-            remoteDataSource.saveMovimientos(movimientoDto)
+            val dto = movimiento.toDto()
+            remoteDataSource.saveMovimientos(dto)
             Resource.Success(Unit)
         } catch (e: HttpException) {
-            Resource.Error("Error de servidor: ${e.message()}")
-        } catch (e: IOException) {
-            Resource.Error("Error de red: ${e.message}")
+            Resource.Error("Error del servidor: ${e.message()}")
         } catch (e: Exception) {
             Resource.Error("Error desconocido: ${e.localizedMessage}")
         }

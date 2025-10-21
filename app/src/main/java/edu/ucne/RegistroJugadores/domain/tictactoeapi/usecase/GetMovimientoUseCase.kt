@@ -9,7 +9,7 @@ import javax.inject.Inject
 class GetMovimientoUseCase @Inject constructor(
     private val repository: MovimientosRepository
 ) {
-    operator fun invoke(id: Int): Flow<Resource<Movimiento>> {
+    operator fun invoke(id: Int): Flow<Resource<List<Movimiento>>> {
         return repository.getMovimiento(id)
     }
 }

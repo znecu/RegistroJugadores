@@ -7,6 +7,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface MovimientosRepository {
 
-    fun getMovimiento(id: Int): Flow<Resource<Movimiento>>
+    fun getMovimiento(id: Int): Flow<Resource<List<Movimiento>>>
     suspend fun saveMovimiento(movimiento: Movimiento): Resource<Unit>
 }

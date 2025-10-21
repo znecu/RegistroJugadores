@@ -6,6 +6,7 @@ import javax.inject.Inject
 class RemoteDataSource @Inject constructor(
     private val ticTacToeApi: TicTacToeApi
 ){
-    suspend fun getMovimiento(id: Int) = ticTacToeApi.getMovimiento(id)
+    suspend fun getMovimiento(id: Int): List<MovientosDto> = ticTacToeApi.getMovimiento(id)
     suspend fun saveMovimientos(movientosDto: MovientosDto) = ticTacToeApi.saveMovimientos(movientosDto)
+
 }

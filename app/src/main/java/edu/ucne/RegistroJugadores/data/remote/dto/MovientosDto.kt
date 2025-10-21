@@ -4,5 +4,5 @@ data class MovientosDto(
     val movimientoId: Int,
     val jugador: String,
     val posicionFila: Int,
-    val posicionColumna: Int,
+    val posicionColumna: Int
     )

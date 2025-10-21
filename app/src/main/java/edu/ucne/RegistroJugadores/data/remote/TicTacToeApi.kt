@@ -6,7 +6,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 
-interface TicTacToecApi {
+interface TicTacToeApi {
     @GET("api/Movimientos/{partidaId}")
     suspend fun getMovimiento(): List<MovientosDto>
 

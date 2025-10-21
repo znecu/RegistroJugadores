@@ -4,8 +4,8 @@ import edu.ucne.RegistroJugadores.data.remote.dto.MovientosDto
 import javax.inject.Inject
 
 class RemoteDataSource @Inject constructor(
-    private val ticTacToecApi: TicTacToecApi
+    private val ticTacToeApi: TicTacToeApi
 ){
-    suspend fun getMovimiento(id: Int) = ticTacToecApi.getMovimiento()
-    suspend fun saveMovimientos(movientosDto: MovientosDto) = ticTacToecApi.saveMovimientos(movientosDto)
+    suspend fun getMovimiento(id: Int) = ticTacToeApi.getMovimiento()
+    suspend fun saveMovimientos(movientosDto: MovientosDto) = ticTacToeApi.saveMovimientos(movientosDto)
 }

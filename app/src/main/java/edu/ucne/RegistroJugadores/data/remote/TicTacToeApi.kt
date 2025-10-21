@@ -5,11 +5,11 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 interface TicTacToeApi {
     @GET("api/Movimientos/{partidaId}")
-    suspend fun getMovimiento(): List<MovientosDto>
-
+    suspend fun getMovimiento(@Path("partidaId") partidaId: Int): List<MovientosDto>
     @POST("api/Movimientos")
     suspend fun saveMovimientos(@Body movientosDto: MovientosDto): Response<Unit>
 }

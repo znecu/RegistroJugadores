@@ -4,13 +4,13 @@ import edu.ucne.RegistroJugadores.data.remote.dto.MovientosDto
 import edu.ucne.RegistroJugadores.domain.tictactoeapi.model.Movimiento
 
 fun MovientosDto.toDomain(): Movimiento = Movimiento(
-    partidaId = movimientoId,
+    partidaId = partidaId,
     jugador = jugador,
     posicionFila = posicionFila,
     posicionColumna = posicionColumna
 )
 fun Movimiento.toDto(): MovientosDto = MovientosDto(
-    movimientoId = partidaId,
+    partidaId = partidaId,
     jugador = jugador,
     posicionFila = posicionFila,
     posicionColumna = posicionColumna

@@ -6,7 +6,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import edu.ucne.RegistroJugadores.data.remote.TicTacToecApi
+import edu.ucne.RegistroJugadores.data.remote.TicTacToeApi
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
@@ -14,7 +14,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 @Module
 object ApiModule {
-    const val BASE_URL = "https://gestionhuacalesapi.azurewebsites.net/swagger/v1/swagger.json"
+    const val BASE_URL = "https://gestionhuacalesapi.azurewebsites.net"
 
     @Provides
     @Singleton
@@ -25,12 +25,12 @@ object ApiModule {
 
     @Provides
     @Singleton
-    fun provideTicketingApi(moshi: Moshi): TicTacToecApi {
+    fun provideTicTacToeApi(moshi: Moshi): TicTacToeApi {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
-            .create(TicTacToecApi::class.java)
+            .create(TicTacToeApi::class.java)
     }
 
 }

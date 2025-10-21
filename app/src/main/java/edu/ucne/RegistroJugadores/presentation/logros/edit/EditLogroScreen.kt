@@ -1,17 +1,14 @@
-package edu.ucne.RegistroJugadores.presentation.jugadores.edit
+package edu.ucne.RegistroJugadores.presentation.logros.edit
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
+import androidx.compose.material.Button
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Text
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -22,62 +19,60 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
-fun EditJugadorScreen(
-    viewModel: EditJugadorViewModel = hiltViewModel()
-){
+fun EditLogroScreen(
+    viewModel: EditLogroViewModel = hiltViewModel()
+) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-
-    EditJugadorBody(
+    EditLogroBody(
         state = state,
         onEvent = viewModel::onEvent
     )
 }
 
 @Composable
-fun EditJugadorBody(
-    state: EditJugadorUiState,
-    onEvent: (EditJugadorUiEvent) -> Unit
-){
+fun EditLogroBody(
+    state: EditLogroUiState,
+    onEvent: (EditLogroUiEvent) -> Unit
+) {
     Column(
         modifier = Modifier
             .padding(16.dp)
-    ){
+
+    ) {
         OutlinedTextField(
-            value = state.nombres,
-            onValueChange = {onEvent(EditJugadorUiEvent.NombresChanged(it)) },
-            label = { Text("Nombres: ") },
-            isError = state.nombreError != null,
+            value = state.titulo,
+            onValueChange = { onEvent(EditLogroUiEvent.TituloChanged(it)) },
+            label = { Text("Titulo: ") },
+            isError = state.tituloError != null,
             modifier = Modifier
                 .fillMaxWidth()
-                .testTag("input_nombres")
+                .testTag("input_titulo")
         )
-        if(state.nombreError != null){
+        if (state.tituloError != null) {
             Text(
-                text = state.nombreError,
+                text = state.tituloError,
                 color = MaterialTheme.colorScheme.error
             )
         }
         Spacer(Modifier.height(16.dp))
-
         OutlinedTextField(
-            value = state.partidas,
-            onValueChange = {onEvent(EditJugadorUiEvent.PartidasChanged(it)) },
-            label = { Text("Partidas: ") },
-            isError = state.partidasError != null,
+            value = state.descripcion,
+            onValueChange = { onEvent(EditLogroUiEvent.DescripcionChanged(it)) },
+            label = { Text("Descripcion: ") },
+            isError = state.descripcionError != null,
             modifier = Modifier
                 .fillMaxWidth()
-                .testTag("input_partidas")
+                .testTag("input_descripcion")
         )
-        if(state.partidasError != null){
+        if (state.descripcionError != null) {
             Text(
-                text = state.partidasError,
+                text = state.descripcionError,
                 color = MaterialTheme.colorScheme.error
             )
         }
         Spacer(Modifier.height(16.dp))
-
         Button(
-            onClick = { onEvent(EditJugadorUiEvent.Save)},
+            onClick = { onEvent(EditLogroUiEvent.Save) },
             enabled = !state.isSaving,
             modifier = Modifier
                 .fillMaxWidth()
@@ -89,9 +84,9 @@ fun EditJugadorBody(
 }
 @Preview
 @Composable
-private fun EditJugadorBodyPreview(){
-    val state = EditJugadorUiState()
+private fun EditLogroBodyPreview() {
+    val state = EditLogroUiState()
     MaterialTheme {
-        EditJugadorBody(state = state) { }
+        EditLogroBody(state = state) { }
     }
 }

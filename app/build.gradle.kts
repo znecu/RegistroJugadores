@@ -1,11 +1,3 @@
-//plugins {
-//    alias(libs.plugins.android.application)
-//    alias(libs.plugins.kotlin.android)
-//    alias(libs.plugins.kotlin.compose)
-//    alias(libs.plugins.kotlin.serialization)
-//    id("com.google.devtools.ksp")
-//    id("com.google.dagger.hilt.android")
-//}
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -52,9 +44,10 @@ android {
 }
 
 dependencies {
-    
+
     implementation("androidx.hilt:hilt-work:1.0.0")
     ksp("androidx.hilt:hilt-compiler:1.0.0")
+    implementation("androidx.work:work-runtime-ktx:2.9.1")
 
     //imagenes
     implementation("io.coil-kt:coil-compose:2.5.0")

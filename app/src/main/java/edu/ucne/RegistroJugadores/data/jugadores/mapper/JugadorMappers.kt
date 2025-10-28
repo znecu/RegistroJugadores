@@ -4,13 +4,15 @@ import edu.ucne.RegistroJugadores.data.jugadores.local.JugadorEntity
 import edu.ucne.RegistroJugadores.domain.jugadores.model.Jugador
 
 fun JugadorEntity.toDomain(): Jugador = Jugador(
-    jugadorId = jugadorId,
+    id = id,
     nombres = nombres,
-    partidas = partidas
+    email = email,
+    isPendingCreate = isPendingCreate
 )
 
 fun Jugador.toEntity(): JugadorEntity = JugadorEntity(
-    jugadorId = jugadorId,
+    id = id,
     nombres = nombres,
-    partidas = partidas
+    email = email,
+    isPendingCreate = isPendingCreate
 )

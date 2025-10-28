@@ -7,4 +7,5 @@ class DeleteJugadorUseCase @Inject constructor(
     private val repository: JugadorRepository
 ) {
     suspend operator fun invoke(id: Int) = repository.deleteById(id)
+    suspend operator fun invoke(id: String) = repository.delete(id)
 }

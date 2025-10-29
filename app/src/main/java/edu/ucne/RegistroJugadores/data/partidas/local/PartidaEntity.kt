@@ -7,26 +7,26 @@ import edu.ucne.RegistroJugadores.data.jugadores.local.JugadorEntity
 import java.util.Date
 @Entity(
     tableName = "Partidas",
-    foreignKeys = [
-        ForeignKey (
-            entity = JugadorEntity::class,
-            parentColumns = ["jugadorId"],
-            childColumns = ["jugador1Id"],
-            onDelete = ForeignKey.RESTRICT
-        ),
-        ForeignKey (
-            entity = JugadorEntity::class,
-            parentColumns = ["jugadorId"],
-            childColumns = ["jugador2Id"],
-            onDelete = ForeignKey.RESTRICT
-        ),
-        ForeignKey (
-            entity = JugadorEntity::class,
-            parentColumns = ["jugadorId"],
-            childColumns = ["ganadorId"],
-            onDelete = ForeignKey.RESTRICT
-        ),
-    ]
+//    foreignKeys = [
+//        ForeignKey (
+//            entity = JugadorEntity::class,
+//            parentColumns = ["jugadorId"],
+//            childColumns = ["jugador1Id"],
+//            onDelete = ForeignKey.RESTRICT
+//        ),
+//        ForeignKey (
+//            entity = JugadorEntity::class,
+//            parentColumns = ["jugadorId"],
+//            childColumns = ["jugador2Id"],
+//            onDelete = ForeignKey.RESTRICT
+//        ),
+//        ForeignKey (
+//            entity = JugadorEntity::class,
+//            parentColumns = ["jugadorId"],
+//            childColumns = ["ganadorId"],
+//            onDelete = ForeignKey.RESTRICT
+//        ),
+//    ]
 )
 
 class PartidaEntity(

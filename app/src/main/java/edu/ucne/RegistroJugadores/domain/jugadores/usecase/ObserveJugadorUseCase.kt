@@ -8,5 +8,5 @@ import javax.inject.Inject
 class ObserveJugadorUseCase @Inject constructor(
     private val repository: JugadorRepository
 ) {
-    operator fun invoke(): Flow<List<Jugador>> = repository.observeJudador()
+    operator fun invoke(): Flow<List<Jugador>> = repository.observeJugador()
 }

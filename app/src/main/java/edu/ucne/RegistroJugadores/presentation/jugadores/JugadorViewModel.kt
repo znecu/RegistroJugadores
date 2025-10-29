@@ -22,50 +22,51 @@ class JugadorViewModel @Inject constructor(
     private val createJugadorLocalUseCase: CreateJugadorLocalUseCase,
     private val upsertJugadorUseCase: UpsertJugadorUseCase,
     private val deleteJugadorUseCase: DeleteJugadorUseCase,
-    private val triggerEvent: TriggerSyncUseCase,
+    private val triggerSyncUseCase: TriggerSyncUseCase,
 ) : ViewModel() {
     private val _state = MutableStateFlow(JugadorUiState(isLoading = true))
     val state: StateFlow<JugadorUiState> = _state.asStateFlow()
 
-    fun onEvent(event: JugadorEvent) {
+    suspend fun onEvent(event: JugadorEvent) {
         when (event) {
-            is JugadorEvent.CrearJugador -> crearJugador(event.nombres)
+            is JugadorEvent.CrearJugador -> crearJugador(event.nombres, event.email)
             is JugadorEvent.UpdateJugador -> updateJugador(event.jugador)
             is JugadorEvent.DeleteJugador -> deleteJugador(event.id)
             is JugadorEvent.ShowCreateSheet -> _state.update { it.copy(showCreateSheet = true) }
             is JugadorEvent.HideCreateSheet -> _state.update {
                 it.copy(
                     showCreateSheet = false,
-                    jugadorNombres = ""
+                    jugadorNombres = "",
+                    jugadorEmail = ""
                 )
             }
 
             is JugadorEvent.OnNombresChange -> _state.update { it.copy(jugadorNombres = event.nombres) }
             is JugadorEvent.OnEmailChange -> _state.update { it.copy(jugadorEmail = event.email) }
-            is JugadorEvent.UserMessageShown -> clearMessage()
+            is JugadorEvent.UserMessageShown -> _state.update { it.copy(userMessage = null) }
         }
     }
 
-    private fun crearJugador(nombre: String) = viewModelScope.launch {
-        val jugador = Jugador(nombres = nombre, email = "")
+    private fun crearJugador(nombre: String, email: String) = viewModelScope.launch {
+        val jugador = Jugador(nombres = nombre, email = email)
         when (val result = createJugadorLocalUseCase(jugador)) {
             is Resource.Success -> {
                 _state.update {
                     it.copy(
-                        userMessage = "Jugador guardado localmente",
+                        userMessage = "Jugador creado localmente",
                         showCreateSheet = false,
                         jugadorNombres = "",
                         jugadorEmail = ""
                     )
                 }
-                //triggerSyncUseCase()
-
+                triggerSyncUseCase()
             }
 
             is Resource.Error -> _state.update { it.copy(userMessage = result.message) }
             else -> {}
         }
     }
+
     private fun updateJugador(jugador: Jugador) = viewModelScope.launch {
         when (val result = upsertJugadorUseCase(jugador)) {
             is Resource.Success -> _state.update { it.copy(userMessage = "Jugador actualizado") }
@@ -73,13 +74,15 @@ class JugadorViewModel @Inject constructor(
             else -> {}
         }
     }
+
     private fun deleteJugador(id: String) = viewModelScope.launch {
         when (val result = deleteJugadorUseCase(id)) {
-            is Resource.Success -> _state.update { it.copy(userMessage = "Tarea eliminada") }
+            is Resource.Success -> _state.update { it.copy(userMessage = "Jugador eliminado") }
             is Resource.Error -> _state.update { it.copy(userMessage = result.message) }
             else -> {}
         }
     }
+
     private fun clearMessage() {
         _state.update { it.copy(userMessage = null) }
     }

@@ -7,26 +7,25 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Button
-import androidx.compose.material.IconButton
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -35,6 +34,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -43,13 +43,22 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import edu.ucne.RegistroJugadores.domain.jugadores.model.Jugador
+import kotlinx.coroutines.launch
 
 @Composable
 fun JugadorScreen(
     viewModel: JugadorViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    JugadorScreenBody(state, viewModel::onEvent)
+    val scope = rememberCoroutineScope()
+    JugadorScreenBody(
+        state = state,
+        onEvent = { event ->
+            scope.launch {
+                viewModel.onEvent(event)
+            }
+        }
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -69,7 +78,7 @@ fun JugadorScreenBody(
     }
 
     Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { onEvent(JugadorEvent.ShowCreateSheet) },
@@ -77,7 +86,7 @@ fun JugadorScreenBody(
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = "Agregar jugador"
+                    contentDescription = "Agregar Jugador"
                 )
             }
         }
@@ -133,8 +142,7 @@ fun JugadorScreenBody(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp)
-                        .navigationBarsPadding()
-                        .imePadding(),
+                        .navigationBarsPadding(),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     Text(
@@ -149,10 +157,9 @@ fun JugadorScreenBody(
                         modifier = Modifier
                             .fillMaxWidth()
                             .testTag("input_names"),
-                        singleLine = false,
-                        minLines = 3,
-                        maxLines = 15
+                        singleLine = true
                     )
+
                     OutlinedTextField(
                         value = state.jugadorEmail,
                         onValueChange = { onEvent(JugadorEvent.OnEmailChange(it)) },
@@ -160,9 +167,7 @@ fun JugadorScreenBody(
                         modifier = Modifier
                             .fillMaxWidth()
                             .testTag("input_email"),
-                        singleLine = false,
-                        minLines = 15,
-                        maxLines = 25
+                        singleLine = true
                     )
 
                     Row(
@@ -178,14 +183,14 @@ fun JugadorScreenBody(
 
                         Button(
                             onClick = {
-                                if (state.jugadorNombres.isNotBlank()) {
-                                    onEvent(JugadorEvent.CrearJugador(state.jugadorNombres))
+                                if (state.jugadorNombres.isNotBlank() && state.jugadorEmail.isNotBlank()) {
+                                    onEvent(JugadorEvent.CrearJugador(state.jugadorNombres, state.jugadorEmail))
                                 }
                             },
                             modifier = Modifier
                                 .weight(1f)
                                 .testTag("btn_save"),
-                            enabled = state.jugadorNombres.isNotBlank()
+                            enabled = state.jugadorNombres.isNotBlank() && state.jugadorEmail.isNotBlank()
                         ) {
                             Text("Guardar")
                         }
@@ -262,13 +267,12 @@ private fun JugadorListBodyPreview() {
                     isPendingCreate = false
                 ),
                 Jugador(
-                    id = "1",
+                    id = "2",
                     nombres = "Juan Perez",
                     email = "juan@gmail.com",
                     isPendingCreate = false
                 ),
-
-                )
+            )
         )
         JugadorScreenBody(state) {}
     }

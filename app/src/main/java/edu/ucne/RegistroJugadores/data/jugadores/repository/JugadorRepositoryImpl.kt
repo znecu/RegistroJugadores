@@ -3,6 +3,9 @@ package edu.ucne.RegistroJugadores.data.jugadores.repository
 import edu.ucne.RegistroJugadores.data.jugadores.local.JugadorDao
 import edu.ucne.RegistroJugadores.data.jugadores.mapper.toDomain
 import edu.ucne.RegistroJugadores.data.jugadores.mapper.toEntity
+import edu.ucne.RegistroJugadores.data.remote.RemoteDataSource
+import edu.ucne.RegistroJugadores.data.remote.Resource
+import edu.ucne.RegistroJugadores.data.remote.jugadores.JugadorRequest
 import edu.ucne.RegistroJugadores.domain.jugadores.model.Jugador
 import edu.ucne.RegistroJugadores.domain.jugadores.repository.JugadorRepository
 import kotlinx.coroutines.flow.Flow
@@ -10,28 +13,88 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class JugadorRepositoryImpl @Inject constructor(
-    private val dao: JugadorDao
+    private val localDataSource: JugadorDao,
+    private val remoteDataSource: RemoteDataSource
 ) : JugadorRepository {
 
-    override fun observeJudador(): Flow<List<Jugador>> = dao.ObserveAll().map{
-            list -> list.map { it.toDomain() }
+    override fun observeJugador(): Flow<List<Jugador>> = localDataSource.ObserveAll().map { list ->
+        list.map { it.toDomain() }
     }
 
-    override suspend fun getJugador(id: Int?): Jugador? = dao.getById(id)?.toDomain()
+    override suspend fun getJugadorById(id: Int?): Jugador? =
+        localDataSource.getById(id)?.toDomain()
 
-    override suspend fun upsert(jugador: Jugador): Int{
-        dao.upsert(jugador.toEntity())
-        return jugador.jugadorId
+    override suspend fun getJugadorById(id: String): Jugador? =
+        localDataSource.getById(id)?.toDomain()
+
+    override suspend fun createJugadorLocal(jugador: Jugador): Resource<Jugador> {
+        val pending = jugador.copy(isPendingCreate = true)
+        localDataSource.upsert(pending.toEntity())
+        return Resource.Success(pending)
     }
 
-    override suspend fun delete(judador: Jugador) {
-        dao.delete(judador.toEntity())
+    override suspend fun upsert(jugador: Jugador): Resource<Unit> {
+        val remoteId = jugador.remoteId ?: return Resource.Error("No remoteId")
+        val req = JugadorRequest(nombres = jugador.nombres, email = jugador.email)
+        return when (val result = remoteDataSource.updateJugador(remoteId, req)) {
+            is Resource.Success -> {
+                localDataSource.upsert(jugador.toEntity())
+                Resource.Success(Unit)
+            }
+
+            is Resource.Error -> result
+            else -> Resource.Loading()
+        }
     }
 
-    override suspend fun deleteById(id: Int) {
-        dao.deleteById(id)
+    override suspend fun deleteJugador(jugador: Jugador): Resource<Unit> {
+        val jugador = localDataSource.getById(jugador.id)
+            ?: return Resource.Error("No se encontro jugador con id $jugador.id")
+        val remoteId = jugador.remoteId ?: return Resource.Error("Jugador no tiene remoteId")
+        return when (val result = remoteDataSource.deleteJugador(remoteId)) {
+            is Resource.Success -> {
+                localDataSource.delete(jugador)
+                Resource.Success(Unit)
+            }
+
+            is Resource.Error -> result
+            else -> Resource.Loading()
+        }
     }
-    override suspend fun existeNombre(nombre: String, excludeId: Int?): Boolean {
-        return dao.existeNombre(nombre, excludeId)
+
+    override suspend fun deleteJugadorById(id: String): Resource<Unit> {
+        val jugador = localDataSource.getById(id)
+            ?: return Resource.Error("No se encontro jugador con id $id")
+        val remoteId = jugador.remoteId ?: return Resource.Error("Jugador no tiene remoteId")
+        return when (val result = remoteDataSource.deleteJugador(remoteId)) {
+            is Resource.Success -> {
+                localDataSource.deleteById(id)
+                Resource.Success(Unit)
+            }
+
+            is Resource.Error -> result
+            else -> Resource.Loading()
+        }
+    }
+
+    override suspend fun jugadorExisteByNombre(nombre: String, idJugadorActual: Int?): Boolean {
+        return localDataSource.existeNombre(nombre, idJugadorActual)
+    }
+
+    override suspend fun postPendingJugadores(): Resource<Unit> {
+        val pending = localDataSource.getPendingCreateJugadores()
+        for (jugador in pending) {
+            val req = JugadorRequest(jugador.nombres, jugador.email)
+            when (val result = remoteDataSource.createJugador(req)) {
+                is Resource.Success -> {
+                    val synced = jugador.copy(remoteId = result.data?.jugadorId, isPendingCreate = false)
+                    localDataSource.upsert(synced)
+                }
+
+                is Resource.Error -> return Resource.Error("Fallo la sincronizacion")
+                else -> {}
+            }
+        }
+        return Resource.Success(Unit)
     }
 }

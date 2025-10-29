@@ -7,6 +7,6 @@ class ExisteNombreUseCase @Inject constructor(
     private val repository: JugadorRepository
 ) {
     suspend operator fun invoke(nombre: String, excludeId: Int? = null): Boolean {
-        return repository.existeNombre(nombre, excludeId)
+        return repository.jugadorExisteByNombre(nombre, excludeId)
     }
 }

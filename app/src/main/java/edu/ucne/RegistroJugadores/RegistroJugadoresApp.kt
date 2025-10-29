@@ -7,12 +7,11 @@ import androidx.work.Configuration
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import dagger.hilt.android.HiltAndroidApp
-import edu.ucne.RegistroJugadores.data.remote.worker.MyWorkerFactory
 import edu.ucne.RegistroJugadores.data.remote.worker.SyncWorker
 import javax.inject.Inject
 
 @HiltAndroidApp
-class RegistroJugadoresApp() : Application(), Configuration.Provider {
+class RegistroJugadoresApp : Application(), Configuration.Provider {
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
 
@@ -21,4 +20,7 @@ class RegistroJugadoresApp() : Application(), Configuration.Provider {
             .setWorkerFactory(workerFactory)
             .build()
 }
-
+fun triggerSyncWorker(context: Context) {
+    val req = OneTimeWorkRequestBuilder<SyncWorker>().build()
+    WorkManager.getInstance(context).enqueue(req)
+}

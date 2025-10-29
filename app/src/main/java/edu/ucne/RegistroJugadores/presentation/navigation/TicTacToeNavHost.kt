@@ -10,14 +10,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import edu.ucne.RegistroJugadores.presentation.jugadores.JugadorScreen
-import edu.ucne.RegistroJugadores.presentation.jugadores.edit.EditJugadorViewModel
-import edu.ucne.RegistroJugadores.presentation.jugadores.list.ListJugadorViewModel
 import edu.ucne.RegistroJugadores.presentation.logros.LogroScreen
 import edu.ucne.RegistroJugadores.presentation.navigation.DrawerMenu
 import edu.ucne.RegistroJugadores.presentation.navigation.Screen
-import edu.ucne.RegistroJugadores.presentation.partidas.PartidaScreen
-import edu.ucne.RegistroJugadores.presentation.partidas.edit.EditPartidaViewModel
-import edu.ucne.RegistroJugadores.presentation.partidas.list.ListPartidaViewModel
+//import edu.ucne.RegistroJugadores.presentation.partidas.PartidaScreen
+//import edu.ucne.RegistroJugadores.presentation.partidas.edit.EditPartidaViewModel
+/*import edu.ucne.RegistroJugadores.presentation.partidas.list.ListPartidaViewModel*/
 import edu.ucne.RegistroJugadores.presentation.tictactoe.TicTacToeScreen
 import kotlinx.coroutines.launch
 
@@ -28,11 +26,8 @@ fun TicTacToeNavHost(
     val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
-    val editJugadorViewModel: EditJugadorViewModel = hiltViewModel()
-    val listJugadorViewModel: ListJugadorViewModel = hiltViewModel()
-
-    val editPartidaViewModel: EditPartidaViewModel = hiltViewModel()
-    val listPartidaViewModel: ListPartidaViewModel = hiltViewModel()
+//    val editPartidaViewModel: EditPartidaViewModel = hiltViewModel()
+//    val listPartidaViewModel: ListPartidaViewModel = hiltViewModel()
 
     DrawerMenu(
         drawerState = drawerState,
@@ -44,26 +39,19 @@ fun TicTacToeNavHost(
         ) {
             composable<Screen.Jugadores> {
                 JugadorScreen(
-                    onDrawer = {
-                        scope.launch {
-                            drawerState.open()
-                        }
-                    },
-                    editJugadorViewModel,
-                    listJugadorViewModel
                 )
             }
-            composable<Screen.Partidas> {
-                PartidaScreen(
-                    onDrawer = {
-                        scope.launch {
-                            drawerState.open()
-                        }
-                    },
-                    editPartidaViewModel,
-                    listPartidaViewModel
-                )
-            }
+//            composable<Screen.Partidas> {
+//                PartidaScreen(
+//                    onDrawer = {
+//                        scope.launch {
+//                            drawerState.open()
+//                        }
+//                    },
+//                    editPartidaViewModel,
+//                    listPartidaViewModel
+//                )
+//            }
             composable<Screen.Logros> {
                 LogroScreen(
                     onDrawer = {
